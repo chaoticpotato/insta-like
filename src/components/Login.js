@@ -1,36 +1,20 @@
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import { login } from "./../store/actions";
 import { useHistory } from "react-router-dom";
-import { toast } from "react-toastify";
-import jwt_decode from "jwt-decode";
+import { useDispatch } from "react-redux";
 
-export default function Login(props) {
+export default function Login() {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const { setUser } = props;
-
+  const dispatch = useDispatch();
   const history = useHistory();
 
   const gonder = (data) => {
-    // request -> https://wit-courses.onrender.com/login, data
-    axios
-      .post("https://wit-courses.onrender.com/login", data)
-      .then((response) => {
-        localStorage.setItem("insta", response.data.token);
-        // yönlendirme işlemi
-        // feedback vermek
-        toast.success("Giriş başarılı, anasayfaya yönlendiriliyorsun");
-        const user = jwt_decode(response.data.token);
-        setUser(user);
-        setTimeout(() => {
-          history.push("/");
-        }, 3000);
-      })
-      .catch((error) => console.log(error));
+    dispatch(login(data, history));
   };
 
   return (

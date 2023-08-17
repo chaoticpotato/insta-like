@@ -1,11 +1,23 @@
 import { Route, Switch } from "react-router-dom";
-import { useState } from "react";
 import "./App.css";
 import MainNavigation from "./components/MainNavigation";
 import Login from "./components/Login";
 import EntryList from "./components/EntryList";
-import { checkLsForUser } from "./utils";
 import NewEntry from "./components/NewEntry";
+import { useSelector } from "react-redux";
+
+/*
+ - redux, react-redux lib kur -done
+ - bir memur fonksiyonu oluşturmak (reducer) -done
+ - createStore ile depo yaratmak -done
+ - depoyu Provider ile index.js te kullanmak -done
+ - actions oluşturmak
+
+ - asnyc bir actions varsa thunk middleware'i eklemek
+
+ - depodan bi şey kullanırken useSelector
+ - depoya bi şey yazarken useDispatch 
+ */
 
 /*
 localstorage'a bak
@@ -16,14 +28,13 @@ yoksa
 */
 
 function App() {
-  const userFromLs = checkLsForUser();
-  const [user, setUser] = useState(userFromLs);
+  const user = useSelector((depo) => depo.user);
 
   // console.log("içerdeki kullanıcı", user);
 
   return (
     <div className="container max-w-[480px] mx-auto">
-      <MainNavigation user={user} setUser={setUser} />
+      <MainNavigation />
 
       <Switch>
         <Route path="/" exact>
@@ -38,7 +49,7 @@ function App() {
         )}
 
         <Route path="/login">
-          <Login setUser={setUser} />
+          <Login />
         </Route>
       </Switch>
     </div>

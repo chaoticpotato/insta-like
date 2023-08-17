@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
-import axios from "axios";
-import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { addEntry } from "./../store/actions";
 
 export default function NewEntry(props) {
   const {
@@ -10,30 +10,19 @@ export default function NewEntry(props) {
     formState: { errors },
   } = useForm();
 
-  function addEntry(data) {
+  const dispatch = useDispatch();
+
+  function handleAddEntry(data) {
     const dataWithUserId = { ...data, owner_id: props.userId };
-    console.log(dataWithUserId);
-
-    const token = localStorage.getItem("insta");
-
-    axios
-      .post("https://wit-courses.onrender.com/entries", dataWithUserId, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        if (res.status === 201) {
-          toast.success("İçerik başarıyla eklendi!");
-          reset();
-        }
-      })
-      .catch((err) => console.log(err));
+    dispatch(addEntry(dataWithUserId, reset));
   }
 
   return (
     <div className="border border-white mb-8 py-6 rounded-lg">
-      <form className="max-w-[320px] mx-auto" onSubmit={handleSubmit(addEntry)}>
+      <form
+        className="max-w-[320px] mx-auto"
+        onSubmit={handleSubmit(handleAddEntry)}
+      >
         <h2 className="text-lg mb-2 font-bold">Yeni İçerik Ekle</h2>
         <label className="flex flex-col gap-1 py-1">
           <span className="flex justify-between items-baseline">

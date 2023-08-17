@@ -1,38 +1,34 @@
 import { NavLink, useHistory } from "react-router-dom";
-import { toast } from "react-toastify";
 
-export default function MainNavigation(props) {
+import { logout } from "./../store/actions";
+import { useDispatch, useSelector } from "react-redux";
+
+export default function MainNavigation() {
   // console.log("mainNav props", props);
 
+  const user = useSelector((depo) => depo.user);
+
   const history = useHistory();
+  const dispatch = useDispatch();
 
   function handleLogout() {
-    localStorage.removeItem("insta");
-    props.setUser(null);
-    toast.success("Çıkış başarılı", {
-      autoClose: 1500,
-    });
-    setTimeout(() => {
-      history.push("/login");
-    }, 2000);
+    dispatch(logout(history));
   }
-
-  // console.log("Nav içi user", props.user);
 
   return (
     <nav
       className="text-lg py-2 font-bold flex gap-2 justify-center"
-      key={props.user?.id}
+      key={user?.id}
     >
       <NavLink to="/" exact activeClassName="text-yellow-500">
         Anasayfa
       </NavLink>
-      {props.user && (
+      {user && (
         <NavLink to="/me" activeClassName="text-yellow-500">
           Profil
         </NavLink>
       )}
-      {props.user ? (
+      {user ? (
         <button onClick={handleLogout}>Çıkış</button>
       ) : (
         <NavLink to="/login" activeClassName="text-yellow-500">
