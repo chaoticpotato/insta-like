@@ -27,6 +27,20 @@ yoksa
   user = null
 */
 
+/*
+Güncellemeler:
+- action hatası düzeltmek -done
+
+- Endpoint değişiklikleri
+  - DÜZELTME/entries/:owner_id -> kullanıcının like edip etmediğini getirecek
+
+  - like bilgisi içermeyen -> /entries
+  - YENİ: tüm entrylerin ve like bilgisini getiren -> /entriesWithLikes/:user_id
+
+- EntryList prop değişiklikleri
+- like/dislike kısmını yapmak
+*/
+
 function App() {
   const user = useSelector((depo) => depo.user);
 
@@ -38,13 +52,17 @@ function App() {
 
       <Switch>
         <Route path="/" exact>
-          <EntryList />
+          <EntryList
+            from="main-page"
+            url={user ? "/entriesWithLikes/" + user.id : "/entries"}
+          />
         </Route>
 
         {user && (
           <Route path="/me">
             <NewEntry userId={user.id} />
-            <EntryList userId={user.id} />
+            {/* https://wit-courses.onrender.com/entries/1 */}
+            <EntryList from="profile-page" url={"/entries/" + user.id} />
           </Route>
         )}
 

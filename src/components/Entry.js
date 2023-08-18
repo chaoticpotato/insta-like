@@ -11,7 +11,7 @@ export default function Entry(props) {
 
   const user = useSelector((depo) => depo.user);
 
-  const didUserLikeThis = true;
+  const didUserLikeThis = entry.is_liked;
 
   const formattedDate = formatDistanceToNow(new Date(entry.created_at), {
     addSuffix: true,
@@ -32,9 +32,10 @@ export default function Entry(props) {
         data: likeData,
       })
         .then((res) => {
-          if (res.status === 201) {
+          if (res.status === 201 || res.status === 200) {
             setEntry({
               ...entry,
+              is_liked: !entry.is_liked,
               like_count: didUserLikeThis
                 ? Number(entry.like_count) - 1
                 : Number(entry.like_count) + 1,

@@ -4,6 +4,7 @@ import { checkLsForUser } from "./../utils";
 const initialStore = {
   user: checkLsForUser(),
   allEntries: null,
+  myEntries: null,
 };
 
 export function memur(state = initialStore, action) {
@@ -24,6 +25,12 @@ export function memur(state = initialStore, action) {
 
     case "login":
       return { ...state, user: action.payload };
+
+    case "allEntries":
+      return { ...state, allEntries: action.payload };
+
+    case "myEntries":
+      return { ...state, myEntries: action.payload };
 
     default:
       return state;

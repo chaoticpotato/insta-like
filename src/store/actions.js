@@ -23,7 +23,7 @@ export const login = (formData, history) => (dispatch) => {
     .catch((error) => console.log(error));
 };
 
-export const addEntry = (newEntryObj, callback) => async (dispatch) => {
+export const addEntry = (newEntryObj, callback) => (dispatch) => {
   const token = localStorage.getItem("insta");
 
   return axios
@@ -35,8 +35,27 @@ export const addEntry = (newEntryObj, callback) => async (dispatch) => {
     .then((res) => {
       if (res.status === 201) {
         toast.success("İçerik başarıyla eklendi!");
+        dispatch(
+          getEntries("/entries/" + newEntryObj.owner_id, "profile-page")
+        );
         callback();
       }
     })
     .catch((err) => console.log(err));
+};
+
+export const getEntries = (url, from) => (dispatch) => {
+  return axios
+    .get("https://wit-courses.onrender.com" + url)
+    .then((res) => {
+      if (res.status === 200) {
+        const imgPosts = res.data.filter((entry) => entry.img_url);
+        if (from === "profile-page") {
+          dispatch({ type: "myEntries", payload: imgPosts });
+        } else {
+          dispatch({ type: "allEntries", payload: imgPosts });
+        }
+      }
+    })
+    .catch((err) => console.log(err.data));
 };
